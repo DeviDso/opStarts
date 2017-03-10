@@ -1,0 +1,76 @@
+Engineering
+AutoCAD
+Mathematics
+Matlab and Mathematica
+Data Mining
+Statistics
+Electrical Engineering
+Mechanical Engineering
+Electronics
+Algorithm
+CAD/CAM
+Statistical Analysis
+Microcontroller
+Solidworks
+Machine Learning
+Civil Engineering
+PCB Layout
+Home Design
+Arduino
+Digital Design
+Structural Engineering
+Materials Engineering
+Scientific Research
+Circuit Design
+Data Science
+Manufacturing Design
+Verilog / VHDL
+Wireless
+Medical
+Biology
+Chemical Engineering
+Engineering Drawing
+GPS
+Physics
+Telecommunications Engineering
+FPGA
+Industrial Engineering
+Nanotechnology
+Finite Element Analysis
+CATIA
+PLC &amp; SCADA
+Imaging
+Product Management
+Robotics
+Cryptography
+Mechatronics
+Project Scheduling
+Construction Monitoring
+Geotechnical Engineering
+Microbiology
+Microstation
+Natural Language
+Remote Sensing
+Biotechnology
+Geospatial
+Linear Programming
+Aerospace Engineering
+Broadcast Engineering
+Drones
+Petroleum Engineering
+Aeronautical Engineering
+Agronomy
+Human Sciences
+Instrumentation
+Mining Engineering
+Renewable Energy Design
+Surfboard Design
+Textile Engineering
+Astrophysics
+Clean Technology
+Climate Sciences
+Genetic Engineering
+Geology
+Quantum
+RTOS
+Wolfram

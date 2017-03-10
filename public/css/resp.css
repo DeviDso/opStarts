@@ -1,0 +1,43 @@
+@media(max-width: 1009px)
+{
+    .footer_links{
+        text-align: center;
+    }
+    #welcome_services ul li{
+        width: 49%;
+    }
+}
+@media(max-width: 668px)
+{
+    #welcome_services ul li{
+        width: 100%;
+        text-align: center;
+    }
+    #welcome_services ul{
+        padding: 0!important;
+    }
+}
+@media(max-width: 726px)
+{
+    .page{
+        display: none;
+    }
+    .page_mobile{
+        display: block;
+    }
+    #all_pages_services{
+        display: none;
+    }
+    #auth_options{
+        display: none;
+    }
+    #under_top_bar{
+        display: none;
+    }
+    #providers_top_menu{
+        display: none;
+    }
+    #user_options{
+        display: none;
+    }
+}
