@@ -85,41 +85,90 @@
     <link rel="stylesheet" href="{{ url('croppic/croppic.css') }}">
 @endsection
 @section('content')
+<style>
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+    .inputfile + label {
+        margin-top: 12px;
+        font-size: 1em;
+        font-weight: 400;
+        color: white;
+        background: #8e130c;
+        display: inline-block;
+        padding: 2px 5px 2px 5px;
+        border: solid 1px #8e130c;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -ms-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        transition: all 0.3s;
+    }
 
+    .inputfile:focus + label,
+    .inputfile + label:hover {
+        background-color: white;
+        color: black;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -ms-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+    .inputfile + label {
+        cursor: pointer; /* "hand" cursor */
+    }
+</style>
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-body min-height-760">
-                        <div class="col-md-3 text-center">
-                            <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'personal_info')" id="defaultOpen">
-                                <i class="fa fa-info-circle fa-5x" aria-hidden="true"></i>
-                                <h3>Personal Details</h3>
-                            </a>
-                            {{--<hr>--}}
-                            {{--<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'personal_skills')">--}}
-                                {{--<i class="fa fa-magic fa-5x" aria-hidden="true"></i>--}}
-                                {{--<h3>Skills</h3>--}}
-                            {{--</a>--}}
-                            {{--<hr>--}}
-                            {{--<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'personal_settings')">--}}
-                                {{--<i class="fa fa-cogs fa-5x" aria-hidden="true"></i>--}}
-                                {{--<h3>Settings</h3>--}}
-                            {{--</a>--}}
-                        </div>
-                        <div class="col-md-9" id="my_page_settings">
-                            @if(session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
+                        <form class="form-horizontal" role="form" method="POST" action="{{ URL::route('postProfile') }}" enctype="multipart/form-data">
+                            <div class="col-md-3 text-center">
+                                <div class="form-group{{ $errors->has('profile_picture') ? ' has-error' : '' }}">
+                                    <div class="col-md-8">
+                                        <label>Profile picture</label>
+                                        <img src="{{ url($user->profile_picture) }}" alt="{{ $user->name }}" height="120">
+                                        <input type="file" name="file" id="file" class="inputfile" >
+                                        <label for="logo">Change</label>
+                                        <br>
+                                        @if ($errors->has('profile_picture'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('profile_picture') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
                                 </div>
-                            @endif
-                            <form class="form-horizontal" role="form" method="POST" action="{{ URL::route('postProfile') }}" enctype="multipart/form-data">
+                                {{--<hr>--}}
+                                {{--<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'personal_skills')">--}}
+                                    {{--<i class="fa fa-magic fa-5x" aria-hidden="true"></i>--}}
+                                    {{--<h3>Skills</h3>--}}
+                                {{--</a>--}}
+                                {{--<hr>--}}
+                                {{--<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'personal_settings')">--}}
+                                    {{--<i class="fa fa-cogs fa-5x" aria-hidden="true"></i>--}}
+                                    {{--<h3>Settings</h3>--}}
+                                {{--</a>--}}
+                            </div>
+                            <div class="col-md-9" id="my_page_settings">
+                                @if(session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+
                                 {{ csrf_field() }}
 
-                                <div id="personal_info" class="tabcontent">
+
                                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                        <label for="name" class="col-md-3 control-label">Name</label>
                                         <div class="col-md-8">
+                                            <label for="name">Name</label>
                                             <input id="name" type="text" name="name" value="{{ $user->name }}" required>
                                             @if ($errors->has('name'))
                                                 <span class="help-block">
@@ -130,8 +179,8 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('surname') ? ' has-error' : '' }}">
-                                        <label for="name" class="col-md-3 control-label">Surname</label>
                                         <div class="col-md-8">
+                                            <label for="name">Surname</label>
                                             <input id="surname" type="text" name="surname" value="{{ $user->surname }}">
                                             @if ($errors->has('surname'))
                                                 <span class="help-block">
@@ -142,8 +191,8 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('nationality') ? ' has-error' : '' }}">
-                                        <label for="nationality" class="col-md-3 control-label">Nationality</label>
                                         <div class="col-md-8">
+                                            <label for="nationality">Nationality</label>
                                             <select id="nationality" name="nationality">
                                                 @if(!empty($user->nationality))
                                                     <option value="{{ $user->nationality }}" selected="selected">{{ ucfirst($user->nationality) }}</option>
@@ -351,8 +400,8 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
-                                        <label for="gender" class="col-md-3 control-label">Gender</label>
                                         <div class="col-md-8">
+                                            <label for="gender">Gender</label>
                                             Man <input id="man" type="radio" name="gender" value="man" {{ ($user->gender == 'man') ? 'checked="checked"' : ''}}>
                                             Woman <input id="woman" type="radio" name="gender" value="woman" {{ ($user->gender == 'woman') ? 'checked="checked"' : '' }}>
                                             @if ($errors->has('name'))
@@ -364,8 +413,8 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                                        <label for="description" class="col-md-3 control-label">Description</label>
                                         <div class="col-md-8">
+                                            <label for="description">Description</label>
                                             <textarea id="description" name="description">{{ $user->description }}</textarea>
                                             @if ($errors->has('description'))
                                                 <span class="help-block">
@@ -386,23 +435,8 @@
                                         {{--<div class="select-image-btn">Select new image</div>--}}
                                     {{--</div>--}}
 
-                                    <div class="form-group{{ $errors->has('profile_picture') ? ' has-error' : '' }}">
-                                        <label for="logo" class="col-md-3 control-label">Profile picture</label>
-                                        <div class="col-md-8">
-                                            {{--<input type="file" name="profile_picture" id="profile_picture">--}}
-                                            <div id="photo_container">
 
-                                            </div>
-                                            <br>
-                                            <img src="{{ url($user->profile_picture) }}" alt="{{ $user->name }}" height="120">
-                                            {{--@if ($errors->has('profile_picture'))--}}
-                                                {{--<span class="help-block">--}}
-                                                    {{--<strong>{{ $errors->first('profile_picture') }}</strong>--}}
-                                                {{--</span>--}}
-                                            {{--@endif--}}
-                                        </div>
-                                    </div>
-                                </div>
+
 
                                 <div id="personal_skills" class="tabcontent">
                                     <div class="form-group{{ $errors->has('current_status') ? ' has-error' : '' }}">
@@ -503,8 +537,8 @@
                                         </button>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

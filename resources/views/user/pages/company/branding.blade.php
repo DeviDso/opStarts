@@ -1,26 +1,26 @@
 <div id="branding_info" class="tabcontent">
-    <div class="form-group">
-        <label for="logo" class="col-md-3 control-label">Page layout</label>
-        <div class="col-md-9">
-            <div class="col-md-4">
-                <input type="radio" id="layout" name="layout">
-                <h4>Layout 1</h4>
-                <h5 data-toggle="modal" data-target="#layout_1" style="cursor: pointer; color: #8e130c">Preview</h5>
-            </div>
-            <div class="col-md-4">
-                <input type="radio" id="layout" name="layout">
-                <h4>Layout 2</h4>
-                <h5 data-toggle="modal" data-target="#layout_2" style="cursor: pointer; color: #8e130c">Preview</h5>
-            </div>
-            <div class="col-md-4">
-                <input type="radio" id="layout" name="layout">
-                <h4>Layout 3</h4>
-                <h5 data-toggle="modal" data-target="#layout_3" style="cursor: pointer; color: #8e130c">Preview</h5>
-            </div>
-        </div>
-    </div>
+    {{--<div class="form-group">--}}
+        {{--<label for="logo" class="col-md-3 control-label">Page layout</label>--}}
+        {{--<div class="col-md-9">--}}
+            {{--<div class="col-md-4">--}}
+                {{--<input type="radio" id="layout" name="layout">--}}
+                {{--<h4>Layout 1</h4>--}}
+                {{--<h5 data-toggle="modal" data-target="#layout_1" style="cursor: pointer; color: #8e130c">Preview</h5>--}}
+            {{--</div>--}}
+            {{--<div class="col-md-4">--}}
+                {{--<input type="radio" id="layout" name="layout">--}}
+                {{--<h4>Layout 2</h4>--}}
+                {{--<h5 data-toggle="modal" data-target="#layout_2" style="cursor: pointer; color: #8e130c">Preview</h5>--}}
+            {{--</div>--}}
+            {{--<div class="col-md-4">--}}
+                {{--<input type="radio" id="layout" name="layout">--}}
+                {{--<h4>Layout 3</h4>--}}
+                {{--<h5 data-toggle="modal" data-target="#layout_3" style="cursor: pointer; color: #8e130c">Preview</h5>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 
-    <hr>
+    {{--<hr>--}}
 
     <div class="form-group{{ $errors->has('logo') ? ' has-error' : '' }}">
         <label for="logo" class="col-md-3 control-label">Logo</label>

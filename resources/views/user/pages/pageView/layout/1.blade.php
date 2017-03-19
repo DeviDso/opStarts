@@ -3,18 +3,8 @@
         <div class="col-md-12" id="single_page_view_top">
             <div id="main_info">
                 <div id="logo">
-                    <div class="col-md-5">
-                        <img src="{{ url('') }}/{{ $page->logo }}" alt="{{ $page->name }}" height="125">
-                    </div>
-                    <div class="col-md-7">
-{{--                        <h1>{{ $page->company_name }}</h1>--}}
-                        <h2>{{ \opStarts\Categories::name($page->category_id) }}</h2>
-                        <div class="col-md-12">
-                            <div class="nice_line"></div>
-                        </div>
-                        <h3> {{ $page->email }}</h3>
-                        <h3>{{ $page->phone_number }}</h3>
-                    </div>
+                    <img src="{{ url('') }}/{{ $page->logo }}" alt="{{ $page->name }}" height="125">
+
                 </div>
             </div>
         </div>
@@ -24,16 +14,13 @@
                     <h1>{{ $page->name }}</h1>
                     <div class="nice_line"></div>
                     <p>{{ $page->email }}</p>
-                    <p>{{ $page->phone_number }}</p>
-                    @if(count($page->cvr_number) > 0)
+                    <p>+45 {{ $page->phone_number }}</p>
+                    @if(($page->cvr_number) != '')
                         <p>CVR: {{ $page->cvr_number }}</p>
                     @endif
-                    <hr>
-                    <span>{{ $page->street }}, {{ $page->street_number }}</span>
-                    <br>
-                    <span>{{ $page->city }}, {{ $page->post_code }}</span>
-                    <br>
-                    <span>{{ $page->country }}</span>
+                    {{--<hr>--}}
+                    {{--<img src="{{ url(\opStarts\User::find($page->user_id)->profile_picture) }}" height="35">--}}
+                    {{--<b>{{ \opStarts\User::find($page->user_id)->name . ' ' . \opStarts\User::user($page->user_id)->name  }}</b>--}}
                 </div>
                 <hr>
                 <div id="web_links">
@@ -54,6 +41,14 @@
                             <a href="#"><i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i></a>
                         @endif
                     </div>
+                        <hr>
+                        <b>
+                            <span>{{ $page->street }}, {{ $page->street_number }}</span>
+                            <br>
+                            <span>{{ $page->post_code }}, {{ \opStarts\Cities::getName($page->city) }}</span>
+                            <br>
+                            <span style="color: #8e130c">{{ $page->country }}</span>
+                        </b>
                 </div>
                 <hr>
                 <div id="map"></div>
@@ -65,58 +60,21 @@
                 </p>
                 <hr>
                 <h2>Our services</h2>
-                    <span class="col-md-12" style="margin-top: 15px; margin-bottom: 25px;">
-                        @foreach($page->skills()->get() as $skill)
-                            <div class="skill">{{ $skill->name }}</div>
-                        @endforeach
-                    </span>
+                <ul style="list-style: none; width: 100%; float: left;">
+                    @foreach($page->skills()->get() as $skill)
+                        <li style="font-weight: 800; text-decoration: underline; width: 33%; float: left; display: inline;">{{ $skill->name }}</li>
+                    @endforeach
+                </ul>
                 <div class="col-md-12">
                     <hr>
                 </div>
                 <h2>Gallery</h2>
                 <div id="lightgallery" class="margin-bottom">
-                    <a href="{{ url('') }}/portfolio/1.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-1.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/2.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-2.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/1.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-1.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/2.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-2.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/1.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-1.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/2.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-2.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/1.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-1.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/2.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-2.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/1.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-1.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/2.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-2.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/1.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-1.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/2.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-2.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/1.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-1.jpg" class="gallery_item"/>
-                    </a>
-                    <a href="{{ url('') }}/portfolio/2.jpg">
-                        <img src="{{ url('') }}/portfolio/thumb-2.jpg" class="gallery_item"/>
-                    </a>
+                    @foreach($gallery_items as $item)
+                        <a href="{{ url($item->url) }}">
+                            <img src="{{ url($item->url) }}" class="gallery_item"/>
+                        </a>
+                    @endforeach
                 </div>
             </div>
         </div>

@@ -122,7 +122,7 @@
                         <form class="form-horizontal" role="form" method="POST" action="{{URL::route('updatePage', [$page->id]) }}" enctype="multipart/form-data">
                             <div class="col-md-2 padding-bottom text-center">
                                 <div id="info_general">
-                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'general_info')" id="defaultOpen">
+                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'general_info')">
                                         <i class="fa fa-pencil-square-o fa-5x" aria-hidden="true"></i>
                                         <h3>General info</h3>
                                     </a>
@@ -143,7 +143,7 @@
                                 </div>
                                 <hr>
                                 <div id="info_portfolio">
-                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'portfolio_info')">
+                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'portfolio_info')" id="defaultOpen">
                                         <i class="fa fa-picture-o fa-5x" aria-hidden="true"></i>
                                         <h3>Portfolio</h3>
                                     </a>

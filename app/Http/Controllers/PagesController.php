@@ -13,6 +13,7 @@ use opStarts\CurrentStatus;
 use opStarts\Http\Requests;
 use opStarts\Pages;
 use opStarts\Categories;
+use opStarts\Portfolio;
 use opStarts\Services;
 use opStarts\Skills;
 
@@ -148,6 +149,7 @@ class PagesController extends Controller
         $data['category'] = Categories::where('slug', $category)->first();
         $data['city'] = Cities::where('slug', $city)->first();
         $data['page'] = Pages::find($id);
+        $data['gallery_items'] = Portfolio::where('page_id', $id)->get();
 
         return view('user.pages.pageView.main', $data);
     }

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ url('font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ url('css/style.css') }}">
     <link rel="stylesheet" href="{{ url('css/resp.css') }}">
+    <link rel="stylesheet" href="{{ url('css/dropzone.css') }}">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     @yield('styles')
@@ -100,6 +101,8 @@
 <script src="{{ url('bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ url('js/main.js') }}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 @yield('scripts')
+
 </body>
 </html>

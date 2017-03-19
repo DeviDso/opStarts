@@ -14,4 +14,14 @@ class Portfolio extends Model
     {
         return $this->belongsTo('opStarts\Pages');
     }
+
+    public static function store($page, $path)
+    {
+        $portfolio = new Portfolio();
+        $portfolio->page_id = $page;
+        $portfolio->title = '';
+        $portfolio->description = '';
+        $portfolio->url = $path;
+        $portfolio->save();
+    }
 }

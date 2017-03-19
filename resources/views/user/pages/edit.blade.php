@@ -5,45 +5,96 @@
     <link rel="stylesheet" href="{{ url('eac/easy-autocomplete.themes.min.css') }}">
     <link rel="stylesheet" href="{{ url('uploader/fine-uploader-gallery.css') }}">
     <style>
-        #map{
+        .dz-message{
+            display: block!important;
+        }
+        .dropzone .dz-preview .dz-image
+        {
+            width: 75px;
+            height: 75px;
+        }
+        .dz-filename{
+            display: none;
+        }
+        .dz-size{
+            display: none;
+        }
+        .dropzone .dz-preview.dz-image-preview{
+            background: none;
+        }
+        #papa{
+            background: rgba(0, 0, 0, 0.3);
+            color: #8e130c;
+            border: none;
+            font-size: 16px;
+        }
+        #papa:hover{
+            background: rgba(0, 0, 0, 0.2);
+        }
+        #change-cover{
+            border: solid 1px #333333;
+            padding: 5px;
+            background: #333333;
+            margin-top: 5px;
+            float: left;
+            color: white;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            cursor: pointer
+        }
+        #change-cover:hover{
+            color: rgb(162, 162, 162);
+        }
+        #skills{
             width: 100%;
-            height: 168px;
+            float: left;
+        }
+        #logo-image{
+            position: relative;
             display: block;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            color: white;
+            cursor: pointer;
         }
-        .controls {
-            margin-top: 10px;
-            border: 1px solid transparent;
-            border-radius: 2px 0 0 2px;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            height: 32px;
-            outline: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        }
+        #logo-image:hover{
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+            background: #8e130c;
 
-        #pac-input {
-            background-color: #fff;
-            font-family: Roboto;
-            font-size: 15px;
-            font-weight: 300;
-            margin-left: 12px;
-            padding: 0 11px 0 13px;
-            text-overflow: ellipsis;
-            width: 300px;
         }
-
-        #pac-input:focus {
-            border-color: #4d90fe;
+        #logo-image:after{
+            position: absolute;
+            top: 0;
+            left: 35%;
+            content: "Change logo";
         }
-
-        .pac-container {
-            font-family: Roboto;
+        img:hover,
+        #logo-image:hover img {
+            opacity: 0.3;
         }
-
-        #type-selector {
-            color: #fff;
-            background-color: #4d90fe;
-            padding: 5px 11px 0px 11px;
+        .skillz{
+            display: block;
+            width: 100%;
+            background: none;
+            border-bottom: dotted 1px #333333;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+        .skillz:hover:after{
+            content: 'x';
+            float: right;
+        }
+        .skillz:hover{
+            background: #8e130c;
+            color: white;
+            cursor: pointer;
         }
 
         #type-selector label {
@@ -53,15 +104,6 @@
         }
         #disabled_location{
             display: none;
-        }
-        .tabcontent {
-            display: none;
-            padding: 45px 12px;
-            border-top: none;
-        }
-        .tabcontent {
-            -webkit-animation: fadeEffect 1s;
-            animation: fadeEffect 1s; /* Fading effect takes 1 second */
         }
 
         @-webkit-keyframes fadeEffect {
@@ -93,69 +135,213 @@
 
 @section('content')
     <div class="row no-margin" id="my_page_cover">
-
+        <span id="change-cover">
+            Change cover image
+        </span>
     </div>
     <div class="container">
         <div class="row no-margin">
             <div class="col-md-12">
                 <div class="panel panel-default no-padding min-height-760">
                     <div class="panel-body no-padding" id="my_page_settings" style="padding-top: 45px">
-                        {{--<div class="col-md-12" id="menu_options">--}}
-                        {{--<div class="col-md-3 menu_option active" id="general_info">--}}
-                        {{--General information--}}
-                        {{--</div>--}}
-                        {{--<div class="col-md-3 menu_option" id="branding_info">--}}
-                        {{--Branding--}}
-                        {{--</div>--}}
-                        {{--<div class="col-md-3 menu_option" id="services_info">--}}
-                        {{--Services--}}
-                        {{--</div>--}}
-                        {{--<div class="col-md-3 menu_option">--}}
-                        {{--Portfolio--}}
-                        {{--</div>--}}
-                        {{--</div>--}}
                         @if(session('status'))
                             <div class="alert alert-success">
                                 {{ session('status') }}
                             </div>
                         @endif
-                        <form class="form-horizontal" role="form" method="POST" action="{{URL::route('editCompanyPage', [$page->id]) }}" enctype="multipart/form-data">
-                            <div class="col-md-2 padding-bottom text-center">
-                                <div id="info_general">
-                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'general_info')" id="defaultOpen">
-                                        <i class="fa fa-pencil-square-o fa-5x" aria-hidden="true"></i>
-                                        <h3>General info</h3>
-                                    </a>
-                                </div>
-                                <hr>
-                                <div id="info_branding">
-                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'branding_info')">
-                                        <i class="fa fa-star fa-5x" aria-hidden="true"></i>
-                                        <h3>Branding</h3>
-                                    </a>
-                                </div>
-                                <hr>
-                                <div id="info_services">
-                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'services_info')">
-                                        <i class="fa fa-tasks fa-5x" aria-hidden="true"></i>
-                                        <h3>Services</h3>
-                                    </a>
-                                </div>
-                                <hr>
-                                <div id="info_portfolio">
-                                    <a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'portfolio_info')">
-                                        <i class="fa fa-picture-o fa-5x" aria-hidden="true"></i>
-                                        <h3>Portfolio</h3>
-                                    </a>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label for="papa">Gallery images</label>
+                                <div class="dropzone" id="papa">
+                                    <form action="" class="dz-clickable">
+                                        <div class="dz-message">Drop files here or click to upload.
+                                            <br> <span class="note">(There can be <strong>more</strong> then one file at once!)</span>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="col-md-10" style="padding-bottom: 25px;">
-                                {{ csrf_field() }}
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                        <form class="form-horizontal" role="form" method="POST" action="{{ route('updatePage', [$page->id]) }}" enctype="multipart/form-data">
+                            <input type="file" name="cover" id="cover" style="display: none">
+                            <div class="col-md-9">
+                                <div class="col-md-6">
+                                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="name">Page name</label>
+                                            <input id="name" type="text" class="form-control" name="name" value="{{ $page->name }}" required autocomplete="off">
+                                            @if ($errors->has('name'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('name') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
 
-                                @include('user.pages.company.general')
-                                @include('user.pages.company.branding')
-                                @include('user.pages.company.services')
-                                @include('user.pages.company.portfolio')
+                                    <div class="form-group{{ $errors->has('cvr_number') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="cvr_number">CVR Number</label>
+                                            <input id="cvr_number" type="text" class="form-control" name="cvr_number" value="{{ $page->cvr_number }}" autocomplete="off">
+                                            @if ($errors->has('cvr_number'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('cvr_number') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('phone_number') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="phone_number">Phone number</label>
+                                            <input id="phone_number" type="text" class="form-control" name="phone_number" value="{{ $page->phone_number }}" autocomplete="off">
+                                            @if ($errors->has('phone_number'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('phone_number') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="email">Email</label>
+                                            <input id="email" type="email" class="form-control" name="email" value="{{ $page->email }}" required autocomplete="off">
+                                            @if ($errors->has('email'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="address">Address</label>
+                                            <input id="autocomplete" type="text" class="form-control" name="address" value="{{ $page->address }}" required placeholder="Enter your address" onFocus="geolocate()">
+                                            @if ($errors->has('address'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('address') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div id="disabled_location">
+                                        <input name="street_number" class="field" id="street_number" value="{{ $page->number }}">
+                                        <input name="street" class="field" id="route" value="{{ $page->street }}">
+                                        <input name="city" class="field" id="locality" value="{{ \opStarts\Cities::getName($page->city) }}">
+                                        <input name="a_a_l" class="field" id="administrative_area_level_1">
+                                        <input name="post_code" class="field" id="postal_code" value="{{ $page->post_code }}">
+                                        <input name="country" class="field" id="country" value="{{ $page->country }}">
+                                        <input name="lat" class="field" id="lat" value="{{ $page->map_lat }}">
+                                        <input name="long" class="field" id="long" value="{{ $page->map_long }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group{{ $errors->has('website') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="website">Website</label>
+                                            <input id="website" type="text" class="form-control" name="website" value="{{ $page->website }}" autocomplete="off">
+                                            @if ($errors->has('website'))
+                                                <span class="help-block">
+                                            <strong>{{ $errors->first('website') }}</strong>
+                                        </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('facebook') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="facebook">Facebook</label>
+                                            <input id="facebook" type="text" class="form-control" name="facebook" value="{{ $page->facebook }}" autocomplete="off">
+                                            @if ($errors->has('facebook'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('facebook') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('google') ? ' has-error' : '' }}">
+                                        <div class="col-md-9">
+                                            <label for="google">Google</label>
+                                            <input id="google" type="text" class="form-control" name="google" value="{{ $page->google }}" autocomplete="off">
+                                            @if ($errors->has('google'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('google') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('linkedin') ? ' has-error' : '' }} padding-bottom">
+                                        <div class="col-md-9">
+                                            <label for="linkedin">Linked in</label>
+                                            <input id="linkedin" type="text" class="form-control" name="linkedin" value="{{ $page->linkedin }}" autocomplete="off">
+                                            @if ($errors->has('linkedin'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('linkedin') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+                                        <div class="col-md-12">
+                                            <label for="description">Description</label>
+                                            <textarea id="description" class="form-control" name="description" style="min-height: 120px; font-size: 19px">{{ $page->description }}</textarea>
+                                            @if ($errors->has('description'))
+                                                <span class="help-block">
+                                            <strong>{{ $errors->first('description') }}</strong>
+                                        </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} padding-bottom">
+                                    <div class="col-md-12">
+                                        <label for="skills_list">Your services:</label>
+                                        <div id="skills_list">
+                                            @foreach($skills as $skill)
+                                                <span class="skillz" onclick="remove(this)" id="{{ $skill->id }}">{{ $skill->name }}</span>
+                                                <input type="hidden" name="skills[]" value="{{ $skill->id }}" id="hidden-{{ $skill->id }}">
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('skills') ? ' has-error' : '' }}">
+                                    <div class="col-md-12">
+                                        <label for="description">Services</label>
+                                        <input id="skills" type="text" class="form-control" onkeydown="addSkill(this)" autocomplete="off">
+                                        @if ($errors->has('skills'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('skills') }}</strong>
+                                            </span>
+                                        @endif
+                                        <br>
+                                        <label for="skills_list">Can't find your service?</label>
+                                    </div>
+                                </div>
+                                <div class="form-group padding-bottom">
+                                    <div class="col-md-12">
+                                        <div class="col-md-12">
+                                            <div id="skills_list">
+                                                <div class="col-md-12" id="new_skills"></div>
+                                                <div id="add_new_service">
+                                                    + Add new service
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="padding-bottom: 25px; margin-top: 45px">
+                                {{ csrf_field() }}
 
                                 <div class="col-md-3 col-md-offset-2">
                                     <button type="submit" class="actionButton" style="width: 100%">
@@ -183,6 +369,9 @@
                                     </button>
                                 </div>
                             </div>
+                            <div id="gallery_items_container">
+                                <input type="hidden" name="gallery[]">
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -192,85 +381,42 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ url('eac/jquery.easy-autocomplete.min.js') }}"></script>
-    <script src="{{ url('uploader/fine-uploader.js') }}"></script>
-
-    <script type="text/template" id="qq-template-gallery">
-        <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
-            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
-                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
-            </div>
-            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                <span class="qq-upload-drop-area-text-selector"></span>
-            </div>
-            <div class="qq-upload-button-selector qq-upload-button">
-                <div>Upload a file</div>
-            </div>
-            <span class="qq-drop-processing-selector qq-drop-processing">
-                <span>Processing dropped files...</span>
-                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-            </span>
-            <ul class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
-                <li>
-                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                    <div class="qq-progress-bar-container-selector qq-progress-bar-container">
-                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
-                    </div>
-                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                    <div class="qq-thumbnail-wrapper">
-                        <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>
-                    </div>
-                    <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
-                    <button type="button" class="qq-upload-retry-selector qq-upload-retry">
-                        <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
-                        Retry
-                    </button>
-
-                    <div class="qq-file-info">
-                        <div class="qq-file-name">
-                            <span class="qq-upload-file-selector qq-upload-file"></span>
-                            <span class="qq-edit-filename-icon-selector qq-edit-filename-icon" aria-label="Edit filename"></span>
-                        </div>
-                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                        <span class="qq-upload-size-selector qq-upload-size"></span>
-                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
-                            <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
-                        </button>
-                        <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
-                            <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
-                        </button>
-                        <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
-                            <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
-                        </button>
-                    </div>
-                </li>
-            </ul>
-
-            <dialog class="qq-alert-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">Close</button>
-                </div>
-            </dialog>
-
-            <dialog class="qq-confirm-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">No</button>
-                    <button type="button" class="qq-ok-button-selector">Yes</button>
-                </div>
-            </dialog>
-
-            <dialog class="qq-prompt-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <input type="text">
-                <div class="qq-dialog-buttons">
-                    <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                    <button type="button" class="qq-ok-button-selector">Ok</button>
-                </div>
-            </dialog>
-        </div>
+    <script src="{{ url('js/dropzone.js') }}"></script>
+    <script>
+        Dropzone.autoDiscover = false;
+        $(document).ready(function(){
+            var myDropzone = new Dropzone("div#papa", {
+                url: "/pages/update/gallery/add/new/item",
+                addRemoveLinks: true,
+                headers: {
+                    'X-CSRF-Token': $('input[name="_token"]').val()
+                },
+                success: function(file, response){
+                    var container = document.getElementById('gallery_items_container');
+                    container.innerHTML = '<input type="hidden" name="gallery[]" value="' +response+ '">';
+                    console.log(response);
+                }
+//            init: function() {
+//                this.on("addedfile", function(file) {
+//                    console.log(file);
+//                });
+//            },
+//            complete: function(data)
+//            {
+//                console.log(data);
+//            }
+            });
+            myDropzone.on('sending', function(file, xhr, formData){
+                formData.append('pageId', '{{ Route::current()->getParameter('id') }}');
+            });
+            Dropzone.options.myDropzone = {
+                success: function(file, response){
+                    alert(response);
+                }
+            };
+        });
     </script>
+    <script src="{{ url('eac/jquery.easy-autocomplete.min.js') }}"></script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-czJmy1SCXZHwsGGMHMdqzDHGsumsk9k&libraries=places&callback=initAutocomplete" async defer></script>
     <script>
@@ -348,47 +494,24 @@
             }
         }
     </script>
-
-    <script src="{{ url('') }}/tinymce/tinymce.min.js"></script>
-    <script>tinymce.init({ selector:'textarea' });</script>
     <script>
         $(document).ready(function(){
+
+            $('#logo-image').click(function(){
+                $('#logo').click();
+            });
+
+            $('#change-cover').click(function(){
+                $('#cover').click();
+            });
 
             $('#add_new_service').click(function(){
                 var newSkills = document.getElementById('new_skills');
                 $('#new_skills').append('<input type="text" name="newSkills[]" style="margin-top: 5px" placeholder="Your service name?">');
             });
-
-            document.getElementById("defaultOpen").click();
             var general = document.getElementById('general');
             var branding = document.getElementById('branding');
             var services = document.getElementById('services');
-
-            $('#general_info').click(function(){
-                $(this).addClass('active');
-                $('#branding_info').removeClass('active');
-                $('#services_info').removeClass('active');
-                $('#general').show();
-                $('#branding').hide();
-                $('#services').hide();
-            });
-
-            $('#branding_info').click(function(){
-                $(this).addClass('active');
-                $('#general_info').removeClass('active');
-                $('#services_info').removeClass('active');
-                $('#branding').show();
-                $('#services').hide();
-                $('#general').hide();
-            });
-            $('#services_info').click(function(){
-                $(this).addClass('active');
-                $('#general_info').removeClass('active');
-                $('#branding_info').removeClass('active');
-                $('#branding').hide();
-                $('#services').show();
-                $('#general').hide();
-            });
 
             var cover = document.getElementById('my_page_cover');
             var coverURL = '<?php echo url('') ."/" . $page->cover; ?>';
@@ -418,7 +541,7 @@
 
                         if(skillsLength < 5)
                         {
-                            box.innerHTML += '<span class="skill" onclick="remove(this)" id="' + skillID + '">' + skillName + '</span>';
+                            box.innerHTML += '<span class="skillz" onclick="remove(this)" id="' + skillID + '">' + skillName + '</span>';
                             box.innerHTML += '<input type="hidden" name="skills[]" value="' + skillID + '" id="hidden-'+skillID+'">';
                         }
                         else

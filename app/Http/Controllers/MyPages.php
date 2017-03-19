@@ -273,7 +273,7 @@ class MyPages extends Controller
         else
         {
             $validator = Validator::make($data,[
-                'company_name' => 'required',
+                'name' => 'required',
                 'phone_number' => 'required',
                 'email' => 'required|email',
                 'description' => 'required',
@@ -311,8 +311,12 @@ class MyPages extends Controller
                     'linkedin' => $data['linkedin'],
                     'map_lat' => $data['lat'],
                     'map_long' => $data['long'],
-                    'city' => (strlen($city->slug) > 0) ? $city->id : $city,
                     'address' => $data['address'],
+                    'post_code' => $data['post_code'],
+                    'city' => (strlen($city) > 0) ? $city->id : $city,
+                    'street' => $data['street'],
+                    'number' => $data['street_number'],
+                    'country' => $data['country'],
                     'slug' => str_slug($data['name']),
                 ]);
         }
@@ -494,6 +498,14 @@ class MyPages extends Controller
     public function postPortfolio(Request $r, $page)
     {
 
+    }
+
+    public function viewPage($id)
+    {
+        $data['page'] = Pages::find($id);
+        $data['skills'] = $data['page']->skills()->get();
+
+        return view('user.pages.edit', $data);
     }
 
 }

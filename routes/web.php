@@ -10,7 +10,25 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-
+//Route::post('/gallery/post', function(\Illuminate\Http\Request $r){
+//    $mime = $r->file('file')->getClientOriginalExtension();
+//    $fileName = $string = str_random(15) . '.' . $mime;
+//    $path = 'pages/' . $r->input('pageId') . '/gallery/';
+//
+//    $r->file('file')->storeAs($path, $fileName);
+//
+//    $gallery = new \opStarts\Portfolio();
+//    $gallery->page_id = $r->input('pageId');
+//    $gallery->url = $path . $fileName;
+//    $gallery->save();
+//
+//
+//});
+Route::get('blet', function(\Illuminate\Http\Request $request){
+    $g = new \opStarts\Portfolio();
+    $g->page_id = 2;
+    $g->save();
+});
 Route::group(['middleware' => 'categories'], function(){
     Auth::routes();
 
@@ -35,20 +53,24 @@ Route::group(['middleware' => 'categories'], function(){
 
         Route::group(['middleware' => 'confirmed'], function(){
             //PAGES
-            Route::get('/new-page', ['as' => 'newPage', 'uses' => 'PagesController@newPage']);
-            Route::get('/my-pages', ['as' => 'myPages', 'uses' => 'PagesController@myPages']);
+            Route::get('/new', ['as' => 'newPage', 'uses' => 'PagesController@newPage']);
+            Route::get('/my', ['as' => 'myPages', 'uses' => 'PagesController@myPages']);
 
-            Route::get('/my-page/individual/{id}', ['as' => 'myIndividualPage', 'uses' => 'PagesController@myIndividualPage']);
+            Route::get('/my/{id}', ['as' => 'myPage', 'uses' => 'MyPages@viewPage']);
+
+            Route::get('/my/individual/{id}', ['as' => 'myIndividualPage', 'uses' => 'PagesController@myIndividualPage']);
             Route::post('/my-page/individual/{id}', ['as' => 'editIndividualPage', 'uses' => 'MyPages@editIndividualPage']);
 
-            Route::get('/my-page/company/{id}', ['as' => 'myCompanyPage', 'uses' => 'PagesController@myCompanyPage']);
-            Route::post('/my-page/company/{id}', ['as' => 'editCompanyPage', 'uses' => 'MyPages@editCompanyPage']);
-            Route::get('/my-page/page/status/{id}', ['as' => 'changePageStatus', 'uses' => 'MyPages@changePageStatus']);
+            Route::get('/my/company/{id}', ['as' => 'myCompanyPage', 'uses' => 'PagesController@myCompanyPage']);
+            Route::post('/my/company/{id}', ['as' => 'editCompanyPage', 'uses' => 'MyPages@editCompanyPage']);
+            Route::get('/my/page/status/{id}', ['as' => 'changePageStatus', 'uses' => 'MyPages@changePageStatus']);
+
+            //Gallery
+            Route::post('/pages/update/gallery/add/new/item', ['as' => 'galleryPost', 'uses' => 'GalleryController@store']);
 
 
             Route::get('/my-list', ['as' => 'myList', 'uses' => 'PagesController@myList']);
 
-            Route::get('/my-list/{page}', ['as' => 'myPage', 'uses' => 'PagesController@myPage']);
             Route::get('/my-list/portfolio/{page}', ['as' => 'myPagePortfolio', 'uses' => 'PagesController@myPagePortfolio']);
             Route::get('/activate-page/{id}', ['as' => 'activatePage', 'uses' => 'MyPages@activatePage']);
             Route::get('/suspend-page/{id}', ['as' => 'suspendPage', 'uses' => 'MyPages@suspendPage']);
@@ -56,7 +78,7 @@ Route::group(['middleware' => 'categories'], function(){
             //POST
             Route::post('/new-page', ['as' => 'postPage', 'uses' =>'MyPages@postPage']);
             Route::post('/update/page/{id}', ['as' => 'updatePage', 'uses' =>'MyPages@editPage']);
-            Route::post('/delete-page/{id}', ['as' => 'deletePage', 'uses' =>'MyPages@deletePage']);
+            Route::post('/delete/page/{id}', ['as' => 'deletePage', 'uses' =>'MyPages@deletePage']);
             Route::post('/my-list/portfolio/{page}', ['as' => 'postPortfolio', 'uses' => 'MyPages@postPortfolio']);
 
             //GROUPS
@@ -98,3 +120,5 @@ Route::group(['middleware' => 'categories'], function(){
     Route::get('/opStarts/export/data/members', ['as' => 'exportMembers', 'uses' => 'ExportController@allMembers']);
 
 });
+
+
