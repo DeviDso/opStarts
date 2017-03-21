@@ -18,11 +18,21 @@
             color: black;
             font-size: 16px;
             margin-top: 3px;
+            -webkit-transition: all 0.3S;
+            -moz-transition: all 0.3S;
+            -ms-transition: all 0.3S;
+            -o-transition: all 0.3S;
+            transition: all 0.3S;
         }
         .page a:hover{
             background: rgba(142, 19, 12, 0.87);
             color: white;
             text-decoration: none;
+            -webkit-transition: all 0.3S;
+            -moz-transition: all 0.3S;
+            -ms-transition: all 0.3S;
+            -o-transition: all 0.3S;
+            transition: all 0.3S;
         }
         .delete-link{
             background: #8e130c;
@@ -34,6 +44,25 @@
         }
         h2{
             color: #8e130c;
+        }
+        .activate-page {
+            background: #28d028;
+            color: white!important;
+            border-color: #28d028!important;
+            -webkit-transition: all 0.3S;
+            -moz-transition: all 0.3S;
+            -ms-transition: all 0.3S;
+            -o-transition: all 0.3S;
+            transition: all 0.3S;
+        }
+        .activate-page:hover{
+            background: white!important;
+            color: #28d028!important;
+            -webkit-transition: all 0.3S;
+            -moz-transition: all 0.3S;
+            -ms-transition: all 0.3S;
+            -o-transition: all 0.3S;
+            transition: all 0.3S;
         }
     </style>
     <div class="container">
@@ -47,10 +76,22 @@
                             </div>
                         @endif
                         <div class="col-md-3" id="pages_choice">
-                            <div class="col-md-12 text-center">
-                                <a href="{{ route('newPage') }}" class="page_opt">
-                                    <i class="fa fa-rocket fa-5x" aria-hidden="true"></i> <h4>Create new page</h4>
-                                </a>
+                            <div class="col-md-12">
+                                <label style="background: #8e130c; padding: 7px; color: white">Information</label>
+                                <p style="box-shadow: 0px -2px 2px 2px #8e130c;padding: 10px;">
+                                    <b>Page statistics</b>
+                                    <br>
+                                    -
+                                    <br>
+                                    <b>Views this month: </b> 217
+                                    <br>
+                                    <b>Views last month: </b> 249
+                                    <br>
+                                    <b>Total views: </b> 2477
+                                    <br><br>
+                                    <b>Total reviews: </b> 21
+                                    <br>
+                                </p>
                             </div>
                         </div>
                         <div class="col-md-9">
@@ -77,7 +118,7 @@
                                             <span class="active">Active</span>
                                         @else
                                             <span class="inactive">Inactive</span>
-                                            <a href="{{ route('changePageStatus', $page->id) }}">
+                                            <a href="{{ route('changePageStatus', $page->id) }}" class="activate-page">
                                                 Publish
                                             </a>
                                         @endif
@@ -87,44 +128,6 @@
                                         <a class="delete-link" href="{{ route('myPage', $page->id) }}">Delete</a>
                                     </div>
                                 </div>
-                                {{--<div class="page-card">--}}
-                                    {{--<div class="photo">--}}
-                                        {{--<img src="{{ url('') }}/{{ $page->logo }}" height="100%">--}}
-                                    {{--</div>--}}
-                                    {{--<ul class="details">--}}
-                                        {{--<li class="date">Created: {{ substr($page->created_at, 0, 10) }}</li>--}}
-                                        {{--<li class="tags">--}}
-                                            {{--<ul>--}}
-                                                {{--@if($page->skills()->count() == 0)--}}
-                                                    {{--<li><a href="{{ route('editCompanyPage', $page->id) }}">Add skills</a></li>--}}
-                                                {{--@endif--}}
-                                                {{--@foreach($page->skills()->get() as $index => $skill)--}}
-                                                    {{--@if($index != 10)--}}
-                                                        {{--<li><a href="#">{{ $skill->name }}</a></li>--}}
-                                                    {{--@endif--}}
-                                                {{--@endforeach--}}
-                                            {{--</ul>--}}
-                                        {{--</li>--}}
-                                    {{--</ul>--}}
-                                    {{--<div class="description">--}}
-                                        {{--<h1>{{ $page->company_name }}</h1>--}}
-                                        {{--<h2>{{ \opStarts\Categories::name($page->category_id) }}</h2>--}}
-                                        {{--@if($page->status)--}}
-                                            {{--<span class="active">Active</span>--}}
-                                        {{--@else--}}
-                                            {{--<span class="inactive">Inactive</span>--}}
-                                            {{--<a href="{{ route('changePageStatus', $page->id) }}">--}}
-                                                {{--Publish--}}
-                                            {{--</a>--}}
-                                        {{--@endif--}}
-                                        {{--<p class="summary">--}}
-                                            {{--Email: {{ $page->email }}--}}
-                                            {{--<br>--}}
-                                            {{--Phone: {{ $page->phone_number }}--}}
-                                        {{--</p>--}}
-                                            {{--<a href="{{ route('myPage', $page->id) }}">Edit</a>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
                             @endforeach
                         </div>
                     </div>
@@ -132,4 +135,34 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function(){
+            console.log({{ session('toast') }});
+            if('{{ session('toast') }}')
+            {
+                toastr["error"]("You must fill all fields to activate page!", "Error");
+
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            }
+        });
+    </script>
 @endsection

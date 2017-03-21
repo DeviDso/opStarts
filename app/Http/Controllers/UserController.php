@@ -2,6 +2,7 @@
 
 namespace opStarts\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use opStarts\Categories;
 use opStarts\Confirmation;
@@ -70,7 +71,7 @@ class UserController extends Controller
         }
 
         (isset($data['gender'])) ? true : $data['gender'] = NULL;
-        ($r->file('profile_picture')) ? $profilePicture = $r->file('profile_picture')->store('profileImage') : $profilePicture = $user->profile_picture;
+        ($r->file('profile_picture')) ? $profilePicture = $r->file('profile_picture')->store('users/' . Auth::user()->id . '/profile/') : $profilePicture = $user->profile_picture;
 
         User::find(Auth::user()->id)
             ->update([
@@ -84,5 +85,24 @@ class UserController extends Controller
             ]);
 
         return redirect()->back()->with('success', 'You have updated your profile!');
+    }
+
+    public function cropImage(Request $r)
+    {
+        $data = $r->input('imagebase64');
+
+        list($type, $data) = explode(';', $data);
+        list(, $data)      = explode(',', $data);
+
+        $data = base64_decode($data);
+        $path = 'users/' . Auth::user()->id . '/profile/' . str_random(16) . '.jpg';
+
+        Storage::disk('local')->put($path, $data);
+
+        $user = User::find(Auth::user()->id);
+        $user->profile_picture = $path;
+        $user->save();
+
+        return back();
     }
 }

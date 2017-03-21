@@ -17,7 +17,7 @@ use opStarts\Portfolio;
 use opStarts\Services;
 use opStarts\Skills;
 
-class PagesController extends Controller
+class   PagesController extends Controller
 {
 
     public function home()
@@ -68,6 +68,7 @@ class PagesController extends Controller
     public function myPages()
     {
         $data['pages'] = Auth::user()->pages()->get();
+//        $data['toast'] = true;
 
         return view('user.pages.myList', $data);
     }
@@ -157,5 +158,12 @@ class PagesController extends Controller
     public function about()
     {
         return view('about');
+    }
+
+    public function user($id)
+    {
+        $data['user'] = User::find($id);
+
+        return view('user.view', $data);
     }
 }

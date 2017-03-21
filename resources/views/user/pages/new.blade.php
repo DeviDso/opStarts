@@ -11,41 +11,12 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-                        <h4 class="text-center">Who are you?</h4>
-                            <div class="col-md-12 text-center" id="page_type">
-                                <div class="col-md-6" onclick="individual()">
-                                    <img src="{{ url('') }}/images/Private.png" id="create_private_page">
-                                    <span>Private</span>
-                                </div>
-                                <div class="col-md-6" onclick="company()">
-                                    <img src="{{ url('') }}/images/Business.png" id="create_company_page">
-                                    <span>Company</span>
-                                </div>
-                            </div>
+                        <h4 class="text-center">Create your page</h4>
+
                         <form class="form-horizontal" role="form" method="POST" action="{{ URL::route('postPage') }}" id="create_page_form">
                             {{ csrf_field() }}
-                            <input type="radio" name="page_type" id="page_type_individual" value="individual" style="display: none;">
-                            <input type="radio" name="page_type" id="page_type_company" value="company" style="display: none;">
 
-                            <div id="company" style="display: none;">
-                                <div class="form-group{{ $errors->has('company_type') ? ' has-error' : '' }}">
-                                    <label for="company_type" class="col-md-4 control-label">Company type</label>
-
-                                    <div class="col-md-6">
-                                        <select id="company_type" name="company_type">
-                                            @foreach($company_types as $type)
-                                                <option value="{{$type->id}}">{{$type->name}}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('company_type'))
-                                            <span class="help-block">
-                                    <strong>{{ $errors->first('company_type') }}</strong>
-                                </span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="rest" style="display: none;">
+                            <div id="rest">
                                 <div class="form-group{{ $errors->has('category') ? ' has-error' : '' }}">
                                     <label for="category" class="col-md-4 control-label">Category</label>
 

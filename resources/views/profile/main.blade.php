@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('styles')
+    <link rel="stylesheet" href="{{ url('croppie/croppie.css') }}">
     <style>
         .skill{
             background: #eee;
@@ -82,7 +83,6 @@
     </style>
     <link rel="stylesheet" href="{{ url('eac/easy-autocomplete.min.css') }}">
     <link rel="stylesheet" href="{{ url('eac/easy-autocomplete.themes.min.css') }}">
-    <link rel="stylesheet" href="{{ url('croppic/croppic.css') }}">
 @endsection
 @section('content')
 <style>
@@ -129,32 +129,34 @@
             <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-body min-height-760">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ URL::route('postProfile') }}" enctype="multipart/form-data">
                             <div class="col-md-3 text-center">
                                 <div class="form-group{{ $errors->has('profile_picture') ? ' has-error' : '' }}">
-                                    <div class="col-md-8">
-                                        <label>Profile picture</label>
-                                        <img src="{{ url($user->profile_picture) }}" alt="{{ $user->name }}" height="120">
-                                        <input type="file" name="file" id="file" class="inputfile" >
-                                        <label for="logo">Change</label>
-                                        <br>
-                                        @if ($errors->has('profile_picture'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('profile_picture') }}</strong>
-                                        </span>
-                                        @endif
-                                    </div>
+                                    <form action="{{ route('bybis') }}" id="form" method="post">
+                                        {{ csrf_field() }}
+                                        <input type="file" id="upload" value="Choose a file" style="display: none;">
+                                        <div id="upload-demo">
+
+                                        </div>
+                                        <input type="hidden" id="imagebase64" name="imagebase64">
+                                        <a href="#" class="upload-result">Update</a> |
+                                        <span id="choose_new">Browse</span>
+                                    </form>
+                                    {{--<form method="post" enctype="multipart/form-data" id="picture_form">--}}
+                                        {{--<div class="col-md-8">--}}
+                                            {{--<label>Profile picture</label>--}}
+                                            {{--<img src="{{ url($user->profile_picture) }}" alt="{{ $user->name }}" height="120">--}}
+                                            {{--<div id="upload-demo"></div>--}}
+                                            {{--<input type="file" name="profile_picture" id="file">--}}
+                                            {{--<label for="logo">Change</label>--}}
+                                            {{--<br>--}}
+                                            {{--@if ($errors->has('profile_picture'))--}}
+                                                {{--<span class="help-block">--}}
+                                                {{--<strong>{{ $errors->first('profile_picture') }}</strong>--}}
+                                            {{--</span>--}}
+                                            {{--@endif--}}
+                                        {{--</div>--}}
+                                    {{--</form>--}}
                                 </div>
-                                {{--<hr>--}}
-                                {{--<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'personal_skills')">--}}
-                                    {{--<i class="fa fa-magic fa-5x" aria-hidden="true"></i>--}}
-                                    {{--<h3>Skills</h3>--}}
-                                {{--</a>--}}
-                                {{--<hr>--}}
-                                {{--<a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'personal_settings')">--}}
-                                    {{--<i class="fa fa-cogs fa-5x" aria-hidden="true"></i>--}}
-                                    {{--<h3>Settings</h3>--}}
-                                {{--</a>--}}
                             </div>
                             <div class="col-md-9" id="my_page_settings">
                                 @if(session('success'))
@@ -162,9 +164,38 @@
                                         {{ session('success') }}
                                     </div>
                                 @endif
-
+                                    <form class="form-horizontal" role="form" method="POST" action="{{ URL::route('postProfile') }}" enctype="multipart/form-data">
                                 {{ csrf_field() }}
+                                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                            <div class="col-md-8">
+                                                <label for="name">Email</label>
+                                                <input id="email" type="email" name="email" value="{{ $user->email }}" disabled>
+                                                @if ($errors->has('email'))
+                                                    <span class="help-block">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                                @endif
+                                            </div>
+                                        </div>
 
+                                        <div class="form-group{{ $errors->has('phone_number') ? ' has-error' : '' }}">
+                                            <div class="col-md-8">
+                                                <label for="phone_number">Phone number</label>
+                                                <input id="phone_number" type="text" name="phone_number" value="{{ $user->phone_number }}" disabled>
+                                                @if(Auth::user()->status == 0)
+                                                    <small>
+                                                        <a href="{{ URL::route('confirmation') }}">
+                                                            Confirm number
+                                                        </a>
+                                                    </small>
+                                                @endif
+                                                @if ($errors->has('phone_number'))
+                                                    <span class="help-block">
+                                                <strong>{{ $errors->first('phone_number') }}</strong>
+                                            </span>
+                                                @endif
+                                            </div>
+                                        </div>
 
                                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                         <div class="col-md-8">
@@ -424,112 +455,6 @@
                                         </div>
                                     </div>
 
-                                    {{--<div id="image-cropper">--}}
-                                        {{--<div class="cropit-preview"></div>--}}
-
-                                        {{--<input type="range" class="cropit-image-zoom-input" />--}}
-
-                                        {{--<!-- The actual file input will be hidden -->--}}
-                                        {{--<input type="file" class="cropit-image-input" />--}}
-                                        {{--<!-- And clicking on this button will open up select file dialog -->--}}
-                                        {{--<div class="select-image-btn">Select new image</div>--}}
-                                    {{--</div>--}}
-
-
-
-
-                                <div id="personal_skills" class="tabcontent">
-                                    <div class="form-group{{ $errors->has('current_status') ? ' has-error' : '' }}">
-                                        <label for="current_status" class="col-md-3 control-label">Current status</label>
-
-                                        <div class="col-md-8">
-                                            <select id="current_status" name="current_status">
-                                                @foreach($current_status as $cs)
-                                                    <option value="{{ $cs->id }}" {{ ($user->current_status == $cs->id) ? 'selected="selected"' : '' }}>{{ $cs->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('current_status'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('current_status') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                                        <label for="description" class="col-md-3 control-label">Skills search</label>
-                                        <div class="col-md-8">
-                                            <input id="skills" type="text" style="width: 250px" onkeydown="addSkill(this)" autocomplete="off">
-                                            @if ($errors->has('description'))
-                                                <span class="help-block">
-                                                <strong>{{ $errors->first('description') }}</strong>
-                                            </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                        <label for="skills_list" class="col-md-3 control-label">
-                                            <small>Your skills:</small>
-                                        </label>
-                                        <div class="col-md-8">
-                                            <div id="skills_list">
-                                                @foreach($skills as $skill)
-                                                    <span class="skill" onclick="remove(this)" id="{{ $skill->id }}">{{ $skill->name }}</span>
-                                                    <input type="hidden" name="skills[]" value="{{ $skill->id }}" id="hidden-{{ $skill->id }}">
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="form-group padding-bottom">
-                                        <label for="skills_list" class="col-md-3 control-label">
-                                            Can't find your service?
-                                        </label>
-                                        <div class="col-md-9">
-                                            <div id="skills_list">
-                                                <div class="col-md-12" id="new_skills"></div>
-                                                <div id="add_new_service">
-                                                    + Add new service
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="personal_settings" class="tabcontent">
-                                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                        <label for="name" class="col-md-3 control-label">Email</label>
-                                        <div class="col-md-8">
-                                            <input id="email" type="email" name="email" value="{{ $user->email }}" disabled>
-                                            @if ($errors->has('email'))
-                                                <span class="help-block">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group{{ $errors->has('phone_number') ? ' has-error' : '' }}">
-                                        <label for="phone_number" class="col-md-3 control-label">Phone number</label>
-                                        <div class="col-md-8">
-                                            <input id="phone_number" type="text" name="phone_number" value="{{ $user->phone_number }}" disabled>
-                                            @if(Auth::user()->status == 0)
-                                                <small>
-                                                    <a href="{{ URL::route('confirmation') }}">
-                                                        Confirm number
-                                                    </a>
-                                                </small>
-                                            @endif
-                                            @if ($errors->has('phone_number'))
-                                                <span class="help-block">
-                                                <strong>{{ $errors->first('phone_number') }}</strong>
-                                            </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="form-group">
                                     <div class="col-md-8 col-md-offset-4">
                                         <button type="submit" class="actionButton">
@@ -547,29 +472,59 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ url('croppie/croppie.js') }}"></script>
     <script src="{{ url('') }}/eac/jquery.easy-autocomplete.min.js"></script>
     <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
         $(document).ready(function(){
+            var $uploadCrop;
+
+            function readFile(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $uploadCrop.croppie('bind', {
+                            url: e.target.result
+                        });
+                        $('.upload-demo').addClass('ready');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $uploadCrop = $('#upload-demo').croppie({
+                url: '{{ url(Auth::user()->profile_picture) }}',
+                showZoomer: false,
+                viewport: {
+                    width: 150,
+                    height: 150,
+                    type: 'square'
+                },
+                boundary: {
+                    width: 150,
+                    height: 150
+                }
+            });
+
+            $('#choose_new').click(function(){
+                $('#upload').click();
+            });
+
+            $('#upload').on('change', function () { readFile(this); });
+            $('.upload-result').on('click', function (ev) {
+                $uploadCrop.croppie('result', {
+                    type: 'canvas',
+                    size: 'original'
+                }).then(function (resp) {
+                    $('#imagebase64').val(resp);
+                    $('#form').submit();
+                });
+            });
 
             $('#add_new_service').click(function(){
                 var newSkills = document.getElementById('new_skills');
                 $('#new_skills').append('<input type="text" name="newSkills[]" style="margin-top: 5px" placeholder="Your service name?">');
             });
 
-            document.getElementById("defaultOpen").click();
             var url = '<?php echo url(''); ?>';
             var options = {
                 url: url + "/opStarts/export/data/skills",
@@ -621,24 +576,6 @@
             };
             $("#skills").easyAutocomplete(options);
         });
-        function addSkill(req)
-        {
-            var input = $('#' + req.id);
-            var text = input.val();
-            var length = text.length;
-            var skills = document.getElementById('skills');
-
-            if(text.charAt(length-1) == ",")
-            {
-                var toMove = text.replace(",", "");
-                var box = document.getElementById('skills_list');
-
-                box.innerHTML += '<span class="skill" onclick="remove(this)">' + toMove + '</span>';
-                box.innerHTML += '<input type="hidden" name="skills[]" value="' + toMove + '">';
-
-                skills.value = '';
-            }
-        }
 
         function remove(element)
         {
@@ -646,37 +583,5 @@
             element.remove();
             skill.remove();
         }
-    </script>
-    <script src="{{ url('croppic/croppic.js') }}"></script>
-    <script>
-        var cont = $('#photo_container');
-        var croppedOptions = {
-            uploadUrl: 'upload',
-            cropUrl: 'crop',
-            cropData:{
-                'width' : cont.width(),
-                'height': cont.height()
-            }
-        };
-        var cropperBox = new Croppic('photo_container', croppedOptions);
-    </script>
-    <script>
-        $(document).ready(function(){
-            $('#image-cropper').cropit();
-
-// When user clicks select image button,
-// open select file dialog programmatically
-            $('.select-image-btn').click(function() {
-                $('.cropit-image-input').click();
-            });
-
-// Handle rotation
-            $('.rotate-cw-btn').click(function() {
-                $('#image-cropper').cropit('rotateCW');
-            });
-            $('.rotate-ccw-btn').click(function() {
-                $('#image-cropper').cropit('rotateCCW');
-            });
-        });
     </script>
 @endsection

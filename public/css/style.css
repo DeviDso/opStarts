@@ -382,6 +382,9 @@ footer .footer_links a{
     position: fixed;
     z-index: 3500;
 }
+#top_bar img:hover{
+    opacity: 0.6;
+}
 #top_bar #top_menu{
     list-style: none;
     display: inline-flex;
@@ -956,9 +959,10 @@ footer .footer_links a{
     text-decoration: none;
 }
 #pages_filter a{
-    font-weight: 800;
+    font-weight: 400;
     color: #8e130c;
     letter-spacing: 1px;
+    font-size: 14px;
 }
 .single-page-card {
     transition: height 0.3s ease;
@@ -1246,7 +1250,7 @@ footer .footer_links a{
     cursor: pointer;
 }
 #single_page_view_content #information #web_links{
-    margin-top: 35px;
+    margin-top: 5px;
     text-align: center;
 }
 #single_page_view_content #information #website a{

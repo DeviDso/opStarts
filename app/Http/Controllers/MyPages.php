@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use opStarts\Cities;
 use opStarts\Http\Requests;
 use opStarts\Pages;
+use opStarts\Portfolio;
 use opStarts\Skills;
 
 class MyPages extends Controller
@@ -20,7 +21,6 @@ class MyPages extends Controller
 
         $validator = Validator::make($data, [
             'category' => 'required',
-            'page_type' => 'required',
             'name' => 'required',
         ]);
 
@@ -29,33 +29,17 @@ class MyPages extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        if($data['page_type'] == 'individual')
-        {
-            $page = Pages::create([
-                'user_id' => Auth::user()->id,
-                'category_id' => $data['category'],
-                'name' => $data['name'],
-                'phone_number' => Auth::user()->phone_number,
-                'email' => Auth::user()->email,
-                'type' => 0,
-                'slug' => str_slug($data['name']),
-            ]);
+        $page = Pages::create([
+            'user_id' => Auth::user()->id,
+            'category_id' => $data['category'],
+            'name' => $data['name'],
+            'phone_number' => Auth::user()->phone_number,
+            'email' => Auth::user()->email,
+            'type' => 0,
+            'slug' => str_slug($data['name']),
+        ]);
 
-            return redirect(URL::route('myIndividualPage', [$page->id]));
-        }
-        else
-        {
-            $page = Pages::create([
-                'user_id' => Auth::user()->id,
-                'category_id' => $data['category'],
-                'company_type' => $data['company_type'],
-                'name' => $data['name'],
-                'type' => 1,
-                'slg' => str_slug($data['name']),
-            ]);
-
-            return redirect(URL::route('myCompanyPage', [$page->id]));
-        }
+        return redirect(URL::route('myPage', [$page->id]));
     }
 
     public function editIndividualPage(Request $r, $id)
@@ -243,8 +227,15 @@ class MyPages extends Controller
     public function changePageStatus($id)
     {
         $page = Pages::find($id);
-        ($page->status) ? $page->status = 0 : $page->status = 1;
-        $page->save();
+        if (count($page->description) > 0)
+        {
+            ($page->status) ? $page->status = 0 : $page->status = 1;
+            $page->save();
+        }
+        else
+        {
+            return back()->with('toast', 'test');
+        }
 
         return back();
     }
@@ -255,36 +246,18 @@ class MyPages extends Controller
         $page = Pages::find($id);
         $newSkills = [];
 
-        if($page->type == 0)
-        {
-            $validator = Validator::make($data,[
-                'name' => 'required',
-                'phone_number' => 'required',
-                'email' => 'required|email',
-                'description' => 'required',
-                'logo' => 'sometimes|mimes:jpeg,jpg,png|dimensions:max_width=500,max_height=500,min_width=75,min_height=75',
-                'cover' => 'sometimes|mimes:jpeg,jpg,png|dimensions:max_width=3000,max_height=1200,min_width=480,min_height=150',
-                'website' => 'url',
-                'facebook' => 'url',
-                'google' => 'url',
-                'linkedin' => 'url',
-            ]);
-        }
-        else
-        {
-            $validator = Validator::make($data,[
-                'name' => 'required',
-                'phone_number' => 'required',
-                'email' => 'required|email',
-                'description' => 'required',
-                'logo' => 'sometimes|mimes:jpeg,jpg,png|dimensions:max_width=500,max_height=500,min_width=75,min_height=75',
-                'cover' => 'sometimes|mimes:jpeg,jpg,png|dimensions:max_width=3000,max_height=1200,min_width=480,min_height=150',
-                'website' => 'url',
-                'facebook' => 'url',
-                'google' => 'url',
-                'linkedin' => 'url',
-            ]);
-        }
+        $validator = Validator::make($data,[
+            'name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email',
+            'description' => 'required',
+            'logo' => 'sometimes|mimes:jpeg,jpg,png|dimensions:max_width=500,max_height=500,min_width=75,min_height=75',
+            'cover' => 'sometimes|mimes:jpeg,jpg,png|dimensions:max_width=3000,max_height=1200,min_width=480,min_height=150',
+            'website' => 'url',
+            'facebook' => 'url',
+            'google' => 'url',
+            'linkedin' => 'url',
+        ]);
 
         if($validator->fails())
         {
@@ -295,57 +268,28 @@ class MyPages extends Controller
         ($r->file('cover')) ? $cover = $r->file('cover')->store('cover') : $cover = $page->cover;
         (strlen($data['city']) > 0) ? $city = Cities::firstOrCreate(['name' => $data['city'], 'slug' => str_slug($data['city'])]) : $city = '';
 
-        if($page->type == 0)
-        {
-            Pages::find($id)
-                ->update([
-                    'name' => $data['name'],
-                    'phone_number' => $data['phone_number'],
-                    'email' => $data['email'],
-                    'description' => $data['description'],
-                    'logo' => $logo,
-                    'cover' => $cover,
-                    'website' => $data['website'],
-                    'facebook' => $data['facebook'],
-                    'google' => $data['google'],
-                    'linkedin' => $data['linkedin'],
-                    'map_lat' => $data['lat'],
-                    'map_long' => $data['long'],
-                    'address' => $data['address'],
-                    'post_code' => $data['post_code'],
-                    'city' => (strlen($city) > 0) ? $city->id : $city,
-                    'street' => $data['street'],
-                    'number' => $data['street_number'],
-                    'country' => $data['country'],
-                    'slug' => str_slug($data['name']),
-                ]);
-        }
-        else
-        {
-            Pages::find($id)
-                ->update([
-                    'name' => $data['name'],
-                    'phone_number' => $data['phone_number'],
-                    'cvr_number' => $data['cvr_number'],
-                    'email' => $data['email'],
-                    'address' => $data['address'],
-                    'post_code' => $data['post_code'],
-                    'city' => (strlen($city) > 0) ? $city->id : $city,
-                    'street' => $data['street'],
-                    'number' => $data['street_number'],
-                    'country' => $data['country'],
-                    'map_lat' => $data['lat'],
-                    'map_long' => $data['long'],
-                    'description' => $data['description'],
-                    'logo' => $logo,
-                    'cover' => $cover,
-                    'website' => $data['website'],
-                    'facebook' => $data['facebook'],
-                    'google' => $data['google'],
-                    'linkedin' => $data['linkedin'],
-                    'slug' => str_slug($data['company_name']),
-                ]);
-        }
+        Pages::find($id)
+            ->update([
+                'name' => $data['name'],
+                'phone_number' => $data['phone_number'],
+                'email' => $data['email'],
+                'description' => $data['description'],
+                'logo' => $logo,
+                'cover' => $cover,
+                'website' => $data['website'],
+                'facebook' => $data['facebook'],
+                'google' => $data['google'],
+                'linkedin' => $data['linkedin'],
+                'map_lat' => $data['lat'],
+                'map_long' => $data['long'],
+                'address' => $data['address'],
+                'post_code' => $data['post_code'],
+                'city' => (strlen($city) > 0) ? $city->id : $city,
+                'street' => $data['street'],
+                'number' => $data['street_number'],
+                'country' => $data['country'],
+                'slug' => str_slug($data['name']),
+            ]);
 
         if(!isset($data['skills']))
         {
@@ -470,7 +414,7 @@ class MyPages extends Controller
     public function activatePage($id)
     {
         $page = Pages::find($id);
-        if($page->user_id == Auth::user()->id)
+        if($page->user_id == Auth::user()->id || count($page->description) > 0 )
         {
             $page->status = 1;
             $page->save();
@@ -505,7 +449,133 @@ class MyPages extends Controller
         $data['page'] = Pages::find($id);
         $data['skills'] = $data['page']->skills()->get();
 
-        return view('user.pages.edit', $data);
+        $data['gallery_items'] = Portfolio::where('page_id', $id)->get();
+
+        return view('user.pages.view', $data);
+    }
+
+    public function description(Request $r, $id)
+    {
+        $data = $r->all();
+
+        $page = Pages::find($id);
+        $page->description = $data['description'];
+        $page->save();
+
+        $result = array('status' => 'success', 'message' => 'Updated');
+
+        return json_encode($result);
+    }
+
+    public function name(Request $r, $id)
+    {
+        $data = $r->all();
+
+        $validator = Validator::make($data,[
+            'value' => 'required|min:2'
+        ]);
+
+        if($validator->fails())
+        {
+            $result = array('status' => true, 'message' => $validator->errors());
+            return json_encode($result);
+        }
+
+        $page = Pages::find($id);
+        $page->name = $r->input('value');
+        $page->save();
+
+        $result = array('status' => 'success', 'message' => 'Updated');
+
+        return json_encode($result);
+    }
+
+    public function email(Request $r, $id)
+    {
+        $data = $r->all();
+
+        $validator = Validator::make($data,[
+            'value' => 'required|min:2'
+        ]);
+
+        if($validator->fails())
+        {
+            $result = array('status' => true, 'message' => $validator->errors());
+            return json_encode($result);
+        }
+
+        $page = Pages::find($id);
+        $page->email = $r->input('value');
+        $page->save();
+
+        $result = array('status' => 'success', 'message' => 'Email updated!');
+
+        return json_encode($result);
+    }
+
+    public function website(Request $r, $id)
+    {
+        $data = $r->all();
+
+        $validator = Validator::make($data,[
+            'value' => 'required|min:2'
+        ]);
+
+        if($validator->fails())
+        {
+            $result = array('status' => true, 'message' => $validator->errors());
+            return json_encode($result);
+        }
+
+        $page = Pages::find($id);
+        $page->website = $r->input('value');
+        $page->save();
+
+        $result = array('status' => 'success', 'message' => 'Website updated!');
+
+        return json_encode($result);
+    }
+
+    public function phone(Request $r, $id)
+    {
+        $data = $r->all();
+
+        $validator = Validator::make($data,[
+            'value' => 'required|min:2'
+        ]);
+
+        if($validator->fails())
+        {
+            $result = array('status' => true, 'message' => $validator->errors());
+            return json_encode($result);
+        }
+
+        $page = Pages::find($id);
+        $page->phone_number = $r->input('value');
+        $page->save();
+
+        $result = array('status' => 'success', 'message' => 'Phone number updated!');
+
+        return json_encode($result);
+    }
+
+    public function logo(Request $r)
+    {
+        $data = $r->input('imagebase64');
+
+        list($type, $data) = explode(';', $data);
+        list(, $data)      = explode(',', $data);
+
+        $data = base64_decode($data);
+        $path = 'users/' . Auth::user()->id . '/profile/' . str_random(16) . '.jpg';
+
+        Storage::disk('local')->put($path, $data);
+
+        $user = User::find(Auth::user()->id);
+        $user->profile_picture = $path;
+        $user->save();
+
+        return back();
     }
 
 }

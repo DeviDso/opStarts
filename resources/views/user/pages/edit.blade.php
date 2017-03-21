@@ -230,7 +230,7 @@
                                     <div id="disabled_location">
                                         <input name="street_number" class="field" id="street_number" value="{{ $page->number }}">
                                         <input name="street" class="field" id="route" value="{{ $page->street }}">
-                                        <input name="city" class="field" id="locality" value="{{ \opStarts\Cities::getName($page->city) }}">
+                                        <input name="city" class="field" id="locality" value="{{ \opStarts\Cities::getName($page->city) }}" required>
                                         <input name="a_a_l" class="field" id="administrative_area_level_1">
                                         <input name="post_code" class="field" id="postal_code" value="{{ $page->post_code }}">
                                         <input name="country" class="field" id="country" value="{{ $page->country }}">
@@ -344,7 +344,7 @@
                                 {{ csrf_field() }}
 
                                 <div class="col-md-3 col-md-offset-2">
-                                    <button type="submit" class="actionButton" style="width: 100%">
+                                    <button type="submit" class="actionButton" style="width: 100%" id="submit_button">
                                         Save
                                     </button>
                                 </div>
@@ -385,6 +385,77 @@
     <script>
         Dropzone.autoDiscover = false;
         $(document).ready(function(){
+            $('#submit_button').click(function(){
+                var city = $('#locality');
+                var description = $('#description');
+                var name = $('name');
+                if(city.value != '')
+                {
+                    toastr["error"]("City address is missing!", "Error");
+
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right",
+                        "preventDuplicates": true,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                }
+                if(description.value != '')
+                {
+                    toastr["error"]("Please describe your activity", "Error");
+
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right",
+                        "preventDuplicates": true,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                }
+                if(name.value != '')
+                {
+                    toastr["error"]("Page name is missing!", "Error");
+
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right",
+                        "preventDuplicates": true,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                }
+            });
             var myDropzone = new Dropzone("div#papa", {
                 url: "/pages/update/gallery/add/new/item",
                 addRemoveLinks: true,
@@ -417,6 +488,8 @@
         });
     </script>
     <script src="{{ url('eac/jquery.easy-autocomplete.min.js') }}"></script>
+    <script src="{{ url('tinymce/tinymce.min.js') }}"></script>
+    <script>tinymce.init({ selector:'textarea' });</script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-czJmy1SCXZHwsGGMHMdqzDHGsumsk9k&libraries=places&callback=initAutocomplete" async defer></script>
     <script>

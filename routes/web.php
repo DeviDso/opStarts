@@ -10,31 +10,16 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-//Route::post('/gallery/post', function(\Illuminate\Http\Request $r){
-//    $mime = $r->file('file')->getClientOriginalExtension();
-//    $fileName = $string = str_random(15) . '.' . $mime;
-//    $path = 'pages/' . $r->input('pageId') . '/gallery/';
-//
-//    $r->file('file')->storeAs($path, $fileName);
-//
-//    $gallery = new \opStarts\Portfolio();
-//    $gallery->page_id = $r->input('pageId');
-//    $gallery->url = $path . $fileName;
-//    $gallery->save();
-//
-//
-//});
-Route::get('blet', function(\Illuminate\Http\Request $request){
-    $g = new \opStarts\Portfolio();
-    $g->page_id = 2;
-    $g->save();
-});
+Route::post('/bybiene', ['as' => 'bybis', 'uses' => 'UserController@cropImage']);
+Route::post('/bybiene2', ['as' => 'bybis2', 'uses' => 'MyPagesController@picture']);
 Route::group(['middleware' => 'categories'], function(){
     Auth::routes();
 
     Route::get('/', ['as' => 'home', 'uses' => 'PagesController@home', 'middleware' => ['categories', 'invitations']]);
 //USER
     Route::group(['middleware' => ['auth', 'invitations']], function(){
+
+        Route::get('/user/profile/{id}', ['as' => 'viewUser', 'uses' => 'PagesController@user']);
 
         Route::get('/profile', ['as' => 'profile', 'uses' => 'PagesController@profile']);
         Route::get('/profile/settings', ['as' => 'settings', 'uses' => 'PagesController@settings']);
@@ -57,6 +42,16 @@ Route::group(['middleware' => 'categories'], function(){
             Route::get('/my', ['as' => 'myPages', 'uses' => 'PagesController@myPages']);
 
             Route::get('/my/{id}', ['as' => 'myPage', 'uses' => 'MyPages@viewPage']);
+
+            //Post
+            Route::post('/user/page/{id}/update', ['as' => 'updatePageZZ']);
+            Route::post('/user/page/{id}/update/description', ['as' => 'updatePageDescription', 'uses' => 'MyPages@description']);
+            Route::post('/user/page/{id}/update/name', ['as' => 'updatePageName', 'uses' => 'MyPages@name']);
+            Route::post('/user/page/{id}/update/email', ['as' => 'updatePageEmail', 'uses' => 'MyPages@email']);
+            Route::post('/user/page/{id}/update/phone', ['as' => 'updatePagePhone', 'uses' => 'MyPages@phone']);
+            Route::post('/user/page/{id}/update/website', ['as' => 'updatePagesWebsite', 'uses' => 'MyPages@website']);
+            Route::post('/user/page/{id}/update/address', ['as' => 'updatePageAddress', 'uses' => 'MyPages@address']);
+            Route::post('/user/page/{id}/update/logo', ['as' => 'updatePageLogo', 'uses' => 'MyPages@logo']);
 
             Route::get('/my/individual/{id}', ['as' => 'myIndividualPage', 'uses' => 'PagesController@myIndividualPage']);
             Route::post('/my-page/individual/{id}', ['as' => 'editIndividualPage', 'uses' => 'MyPages@editIndividualPage']);

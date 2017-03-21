@@ -58,4 +58,19 @@ class User extends Authenticatable
 
         return true;
     }
+
+    public static function getName($id)
+    {
+        return User::find($id)->name;
+    }
+
+    public static function getFullName($id)
+    {
+        return User::find($id)->name . ' ' . User::find($id)->surname;
+    }
+
+    public static function getProfilePicture($id)
+    {
+        return User::find($id)->profile_picture;
+    }
 }
